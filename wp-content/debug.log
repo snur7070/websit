@@ -1,0 +1,916 @@
+[08-Apr-2025 19:55:15 UTC] PHP Warning:  Undefined array key "host" in /workspaces/websit/.wordpress/wp-includes/pluggable.php on line 1625
+[08-Apr-2025 19:57:08 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-08 15:56:55, 2025-04-08 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3103): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(393): wpdb->get_col('\n\t\t\tSELECT\n\t\t\t\t...')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Query.php(67): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Stats/Controller.php(71): Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('revenue', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:08 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-08 15:56:55, 2025-04-08 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3142): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(408): wpdb->get_results('\n\t\t\tSELECT\n\t\t\t\t...', 'ARRAY_A')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Query.php(67): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Stats/Controller.php(71): Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('revenue', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:08 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-08 15:56:55, 2025-04-08 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3103): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(393): wpdb->get_col('\n\t\t\tSELECT\n\t\t\t\t...')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php(80): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/Controller.php(43): Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('orders', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:08 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-08 15:56:55, 2025-04-08 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3142): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(408): wpdb->get_results('\n\t\t\tSELECT\n\t\t\t\t...', 'ARRAY_A')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php(80): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/Controller.php(43): Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('orders', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-08 15:56:55' AND wp_wc_order_stats.`date_paid` >= '2025-04-08 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:09 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-07 23:59:59, 2025-04-07 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3103): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(393): wpdb->get_col('\n\t\t\tSELECT\n\t\t\t\t...')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Query.php(67): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Stats/Controller.php(71): Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('revenue', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:09 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-07 23:59:59, 2025-04-07 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3142): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(408): wpdb->get_results('\n\t\t\tSELECT\n\t\t\t\t...', 'ARRAY_A')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Query.php(67): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Revenue/Stats/Controller.php(71): Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('revenue', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Revenue\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\Revenue\Query->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:09 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-07 23:59:59, 2025-04-07 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3103): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(393): wpdb->get_col('\n\t\t\tSELECT\n\t\t\t\t...')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php(80): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/Controller.php(43): Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('orders', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:09 UTC] WordPress database error <div style="clear:both">&nbsp;</div>
+<div class="queries" style="clear:both;margin-bottom:2px;border:red dotted thin;">
+<p>MySQL query:</p>
+<p>
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10</p>
+<p>Queries made or created this session were:</p>
+<ol>
+<li>Executing: BEGIN | (no parameters)</li>
+<li>Executing: 
+			SELECT
+				(YEAR(wp_wc_order_stats.`date_paid`)|| :param0 || LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( STRFTIME('1',MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`)), :param1 ) - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, :param2 )) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total &lt; 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( :param3 ,:param4 ,:param5 ,:param6 ,:param7 ,:param8  ) ) AND wp_wc_order_stats.`date_paid` &lt;= :param9  AND wp_wc_order_stats.`date_paid` &gt;= :param10 
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 | parameters: -, %w, 0, wc-auto-draft, wc-trash, wc-pending, wc-failed, wc-cancelled, wc-checkout-draft, 2025-04-07 23:59:59, 2025-04-07 00:00:00</li>
+<li>Executing: ROLLBACK | (no parameters)</li>
+</ol>
+</div>
+<div style="clear:both;margin-bottom:2px;border:red dotted thin;" class="error_message" style="border-bottom:dotted blue thin;">
+Error occurred at line 4117 in Function <code>handle_error</code>. Error message was: SQLSTATE[HY000]: General error: 1 no such function: LPAD.
+</div>
+<p>Backtrace:</p>
+<pre>#0 /workspaces/websit/.wordpress/wp-content/mu-plugins/sqlite-database-integration/wp-includes/sqlite/class-wp-sqlite-db.php(287): WP_SQLite_Translator->get_error_message()
+#1 /workspaces/websit/.wordpress/wp-includes/class-wpdb.php(3142): WP_SQLite_DB->query('\n\t\t\tSELECT\n\t\t\t\t...')
+#2 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/DataStore.php(408): wpdb->get_results('\n\t\t\tSELECT\n\t\t\t\t...', 'ARRAY_A')
+#3 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/StatsDataStoreTrait.php(111): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data(Array, Array, Object(stdClass), 1)
+#4 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/DataStore.php(237): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data(Array)
+#5 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-wc-data-store.php(224): Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data(Array)
+#6 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericQuery.php(80): WC_Data_Store->__call('get_data', Array)
+#7 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/Orders/Stats/Controller.php(43): Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data()
+#8 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/GenericStatsController.php(222): Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data(Array)
+#9 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items(Object(WP_REST_Request))
+#10 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#11 /workspaces/websit/.wordpress/wp-includes/rest-api.php(576): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#12 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(370): rest_do_request(Object(WP_REST_Request))
+#13 /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/src/Admin/API/Reports/PerformanceIndicators/Controller.php(407): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data('orders', Array)
+#14 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1292): Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items(Object(WP_REST_Request))
+#15 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(1125): WP_REST_Server->respond_to_request(Object(WP_REST_Request), '/wc-analytics/r...', Array, NULL)
+#16 /workspaces/websit/.wordpress/wp-includes/rest-api/class-wp-rest-server.php(439): WP_REST_Server->dispatch(Object(WP_REST_Request))
+#17 /workspaces/websit/.wordpress/wp-includes/rest-api.php(449): WP_REST_Server->serve_request('/wc-analytics/r...')
+#18 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(324): rest_api_loaded(Object(WP))
+#19 /workspaces/websit/.wordpress/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#20 /workspaces/websit/.wordpress/wp-includes/plugin.php(565): WP_Hook->do_action(Array)
+#21 /workspaces/websit/.wordpress/wp-includes/class-wp.php(418): do_action_ref_array('parse_request', Array)
+#22 /workspaces/websit/.wordpress/wp-includes/class-wp.php(813): WP->parse_request('')
+#23 /workspaces/websit/.wordpress/wp-includes/functions.php(1336): WP->main('')
+#24 /workspaces/websit/.wordpress/wp-blog-header.php(16): wp()
+#25 /workspaces/websit/.wordpress/index.php(17): require('/workspaces/web...')
+#26 {main}</pre>
+ for query 
+			SELECT
+				CONCAT(YEAR(wp_wc_order_stats.`date_paid`), '-', LPAD( FLOOR( ( DAYOFYEAR(wp_wc_order_stats.`date_paid`) + ( ( DATE_FORMAT(MAKEDATE(YEAR(wp_wc_order_stats.`date_paid`),1), '%w') - 0 + 7 ) % 7 ) - 1 ) / 7  ) + 1 , 2, '0')) AS time_interval , MAX(wp_wc_order_stats.date_created) AS datetime_anchor , SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) as orders_count, SUM(wp_wc_order_stats.num_items_sold) as num_items_sold, ( SUM(wp_wc_order_stats.total_sales) + COALESCE( SUM(discount_amount), 0 ) - SUM(wp_wc_order_stats.tax_total) - SUM(wp_wc_order_stats.shipping_total) + ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) ) as gross_sales, SUM(wp_wc_order_stats.total_sales) AS total_sales, COALESCE( SUM(discount_amount), 0 ) AS coupons, COALESCE( coupons_count, 0 ) as coupons_count, ABS( SUM( CASE WHEN wp_wc_order_stats.net_total < 0 THEN wp_wc_order_stats.net_total ELSE 0 END ) ) AS refunds, SUM(wp_wc_order_stats.tax_total) AS taxes, SUM(wp_wc_order_stats.shipping_total) AS shipping, SUM(wp_wc_order_stats.net_total) AS net_revenue, SUM( wp_wc_order_stats.num_items_sold ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_items_per_order, SUM( wp_wc_order_stats.net_total ) / SUM( CASE WHEN wp_wc_order_stats.parent_id = 0 THEN 1 ELSE 0 END ) AS avg_order_value, COUNT( DISTINCT( wp_wc_order_stats.customer_id ) ) as total_customers
+			FROM
+				wp_wc_order_stats
+				LEFT JOIN (
+					SELECT
+						order_id,
+						SUM(discount_amount) AS discount_amount,
+						COUNT(DISTINCT coupon_id) AS coupons_count
+					FROM
+						wp_wc_order_coupon_lookup
+					GROUP BY
+						order_id
+					) order_coupon_lookup
+					ON order_coupon_lookup.order_id = wp_wc_order_stats.order_id
+			WHERE
+				1=1
+				AND ( wp_wc_order_stats.status NOT IN ( 'wc-auto-draft','wc-trash','wc-pending','wc-failed','wc-cancelled','wc-checkout-draft' ) ) AND wp_wc_order_stats.`date_paid` <= '2025-04-07 23:59:59' AND wp_wc_order_stats.`date_paid` >= '2025-04-07 00:00:00'
+		
+				GROUP BY
+					time_interval
+			
+				ORDER BY
+					time_interval desc
+			LIMIT 0,10 made by require('wp-blog-header.php'), wp, WP->main, WP->parse_request, do_action_ref_array('parse_request'), WP_Hook->do_action, WP_Hook->apply_filters, rest_api_loaded, WP_REST_Server->serve_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_items, Automattic\WooCommerce\Admin\API\Reports\PerformanceIndicators\Controller->get_stats_data, rest_do_request, WP_REST_Server->dispatch, WP_REST_Server->respond_to_request, Automattic\WooCommerce\Admin\API\Reports\GenericStatsController->get_items, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Controller->get_datastore_data, Automattic\WooCommerce\Admin\API\Reports\GenericQuery->get_data, WC_Data_Store->__call, Automattic\WooCommerce\Admin\API\Reports\DataStore->get_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_data, Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore->get_noncached_stats_data, WP_SQLite_DB->query, WP_SQLite_DB->print_error
+[08-Apr-2025 19:57:52 UTC] PHP Warning:  Undefined variable $parent_theme_name in /workspaces/websit/.wordpress/wp-content/mu-plugins/one-click-child-theme/templates/create_child_form.php on line 18
+[08-Apr-2025 19:59:11 UTC] PHP Fatal error:  Out of memory (allocated 81788928) (tried to allocate 131072 bytes) in /workspaces/websit/.wordpress/wp-includes/functions.php on line 4371
+[08-Apr-2025 19:59:11 UTC] PHP Fatal error:  Out of memory (allocated 73400320) (tried to allocate 2097152 bytes) in /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-woocommerce.php on line 1305
+[08-Apr-2025 19:59:12 UTC] PHP Fatal error:  Out of memory (allocated 52428800) (tried to allocate 2097152 bytes) in /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-woocommerce.php on line 1305
+[08-Apr-2025 19:59:12 UTC] PHP Fatal error:  Out of memory (allocated 41943040) (tried to allocate 2097152 bytes) in /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-woocommerce.php on line 1305
+[08-Apr-2025 19:59:12 UTC] PHP Fatal error:  Out of memory (allocated 35651584) (tried to allocate 2097152 bytes) in /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-woocommerce.php on line 1305
+[08-Apr-2025 19:59:12 UTC] PHP Fatal error:  Out of memory (allocated 33554432) (tried to allocate 2097152 bytes) in /workspaces/websit/.wordpress/wp-content/plugins/woocommerce/includes/class-woocommerce.php on line 1192
